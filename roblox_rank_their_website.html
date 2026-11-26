@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#ffffff">
+  <title>Roblox Rank Their</title>
+  <style>
+    :root { --ink:#172033; --muted:#687386; --line:#e8edf3; --blue:#3867f5; --pale:#f5f8ff; }
+    * { box-sizing:border-box; }
+    body { margin:0; font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif; color:var(--ink); background:#fff; }
+    a { color:inherit; text-decoration:none; }
+    .wrap { width:min(1120px, calc(100% - 40px)); margin:auto; }
+    header { position:sticky; top:0; z-index:5; background:rgba(255,255,255,.92); backdrop-filter:blur(12px); border-bottom:1px solid var(--line); }
+    nav { height:72px; display:flex; align-items:center; justify-content:space-between; gap:20px; }
+    .brand { display:flex; align-items:center; gap:10px; font-weight:850; letter-spacing:-.5px; }
+    .logo { width:36px; height:36px; border-radius:11px; background:var(--blue); color:white; display:grid; place-items:center; font-size:19px; box-shadow:0 7px 18px #3867f533; }
+    .navlinks { display:flex; gap:26px; color:var(--muted); font-size:14px; font-weight:600; }
+    .navlinks a:hover { color:var(--blue); }
+    .button { border:0; border-radius:12px; padding:12px 17px; background:var(--blue); color:white; font-weight:750; cursor:pointer; box-shadow:0 7px 18px #3867f52b; }
+    .button:hover { filter:brightness(.96); transform:translateY(-1px); }
+    .hero { padding:76px 0 60px; background:radial-gradient(ellipse at 85% 15%,#e9efff 0,transparent 38%),linear-gradient(180deg,#fbfcff,#fff); }
+    .hero-grid { display:grid; grid-template-columns:1.1fr .9fr; align-items:center; gap:46px; }
+    .eyebrow { display:inline-flex; align-items:center; gap:8px; color:var(--blue); background:#edf2ff; border:1px solid #dfe7ff; border-radius:99px; padding:7px 12px; font-size:12px; font-weight:800; }
+    h1 { font-size:clamp(42px,6vw,68px); line-height:1.02; letter-spacing:-3px; margin:20px 0 18px; }
+    h1 span { color:var(--blue); }
+    .lead { color:var(--muted); font-size:17px; line-height:1.7; max-width:560px; }
+    .hero-actions { display:flex; gap:12px; flex-wrap:wrap; margin-top:27px; }
+    .secondary { background:#fff; color:var(--ink); border:1px solid var(--line); box-shadow:none; }
+    .preview { background:white; border:1px solid var(--line); border-radius:24px; padding:22px; box-shadow:0 24px 70px #20345b12; transform:rotate(1deg); }
+    .preview-top { display:flex; justify-content:space-between; align-items:center; margin-bottom:18px; font-weight:800; }
+    .live { color:#16885b; font-size:12px; background:#e9fbf3; border-radius:99px; padding:6px 9px; }
+    .rank-row { display:flex; align-items:center; gap:12px; padding:13px 0; border-top:1px solid var(--line); }
+    .rank-num { width:28px; height:28px; display:grid; place-items:center; border-radius:9px; background:var(--pale); color:var(--blue); font-weight:850; }
+    .game-icon { width:42px; height:42px; display:grid; place-items:center; border-radius:13px; background:linear-gradient(135deg,#e5ecff,#f5f7ff); font-size:21px; }
+    .game-name { font-weight:800; font-size:14px; }
+    .game-sub { color:var(--muted); font-size:12px; margin-top:3px; }
+    .score { margin-left:auto; font-weight:850; color:var(--blue); }
+    section { padding:64px 0; }
+    .section-head { display:flex; align-items:end; justify-content:space-between; gap:20px; margin-bottom:24px; }
+    h2 { margin:0; font-size:32px; letter-spacing:-1.2px; }
+    .section-head p { color:var(--muted); margin:8px 0 0; }
+    .search { width:min(310px,100%); padding:12px 14px; border:1px solid var(--line); border-radius:12px; outline:none; font:inherit; }
+    .search:focus { border-color:var(--blue); box-shadow:0 0 0 3px #3867f51a; }
+    .cards { display:grid; grid-template-columns:repeat(3,1fr); gap:16px; }
+    .card { border:1px solid var(--line); border-radius:18px; padding:19px; background:#fff; transition:.2s; }
+    .card:hover { transform:translateY(-3px); box-shadow:0 14px 35px #1c315012; }
+    .card-icon { height:52px; width:52px; display:grid; place-items:center; border-radius:15px; background:var(--pale); font-size:26px; margin-bottom:15px; }
+    .card h3 { margin:0 0 7px; font-size:17px; }
+    .card p { color:var(--muted); line-height:1.55; font-size:13px; margin:0 0 15px; }
+    .tag { display:inline-block; background:#f1f4f8; color:#536075; border-radius:99px; padding:6px 9px; font-size:11px; font-weight:800; }
+    .empty { display:none; color:var(--muted); padding:22px; text-align:center; border:1px dashed var(--line); border-radius:14px; }
+    .vote-section { background:#fbfcff; }
+    .vote-list { display:grid; gap:12px; margin-top:22px; }
+    .vote-card { display:flex; align-items:center; gap:14px; padding:16px; background:#fff; border:1px solid var(--line); border-radius:16px; }
+    .vote-card .game-icon { flex:0 0 44px; }
+    .vote-info { min-width:0; flex:1; }
+    .vote-info strong { display:block; }
+    .vote-info small { color:var(--muted); }
+    .vote-count { color:var(--blue); font-weight:850; min-width:64px; text-align:right; }
+    .vote-btn { border:1px solid #dce5ff; background:#f1f5ff; color:var(--blue); border-radius:10px; padding:9px 13px; font-weight:800; cursor:pointer; }
+    .vote-btn:disabled { opacity:.55; cursor:not-allowed; }
+    .notice { color:var(--muted); font-size:12px; line-height:1.5; margin-top:14px; }
+    .how { background:#f8faff; }
+    .steps { display:grid; grid-template-columns:repeat(3,1fr); gap:18px; margin-top:26px; }
+    .step { background:white; border:1px solid var(--line); border-radius:17px; padding:22px; }
+    .step b { display:grid; place-items:center; width:32px; height:32px; border-radius:10px; color:var(--blue); background:#edf2ff; margin-bottom:15px; }
+    .step h3 { margin:0 0 7px; }
+    .step p { color:var(--muted); font-size:14px; line-height:1.6; margin:0; }
+    .cta { text-align:center; border:1px solid var(--line); border-radius:24px; padding:42px 20px; background:linear-gradient(135deg,#f6f8ff,#fff); }
+    .cta p { color:var(--muted); margin:10px auto 22px; max-width:520px; line-height:1.6; }
+    footer { border-top:1px solid var(--line); padding:25px 0; color:var(--muted); font-size:12px; }
+    footer .wrap { display:flex; justify-content:space-between; gap:15px; flex-wrap:wrap; }
+    @media(max-width:760px) { .hero-grid { grid-template-columns:1fr; } .preview { transform:none; } .cards,.steps { grid-template-columns:1fr; } .navlinks { display:none; } .section-head { align-items:stretch; flex-direction:column; } .search { width:100%; } h1 { letter-spacing:-2px; } }
+  </style>
+</head>
+<body>
+<header>
+  <div class="wrap">
+    <nav>
+      <a class="brand" href="#"><span class="logo">R</span> Roblox Rank Their</a>
+      <div class="navlinks"><a href="#rankings">Rankings</a><a href="#how">How it works</a><a href="#about">About</a></div>
+      <a class="button" href="#rankings">Explore ranks</a>
+    </nav>
+  </div>
+</header>
+<main>
+  <div class="hero">
+    <div class="wrap hero-grid">
+      <div>
+        <div class="eyebrow">★ THE COMMUNITY RANKING HUB</div>
+        <h1>Find your next<br><span>top Roblox game.</span></h1>
+        <p class="lead">Discover games, compare community ratings, and see what players are talking about. Your next favorite could be one click away.</p>
+        <div class="hero-actions">
+          <a class="button" href="#rankings">View rankings</a>
+          <a class="button secondary" href="#how">How it works</a>
+        </div>
+      </div>
+      <div class="preview">
+        <div class="preview-top"><span>Featured rankings</span><span class="live">● Sample list</span></div>
+        <div class="rank-row"><span class="rank-num">1</span><span class="game-icon">🏙️</span><span><div class="game-name">Brookhaven RP</div><div class="game-sub">Roleplay</div></span><span class="score">9.8</span></div>
+        <div class="rank-row"><span class="rank-num">2</span><span class="game-icon">🦈</span><span><div class="game-name">SharkBite 2</div><div class="game-sub">Survival</div></span><span class="score">9.5</span></div>
+        <div class="rank-row"><span class="rank-num">3</span><span class="game-icon">🐾</span><span><div class="game-name">Adopt Me!</div><div class="game-sub">Roleplay</div></span><span class="score">9.3</span></div>
+        <p style="color:#8a94a5;font-size:11px;margin:16px 0 0">Example scores for design preview — not live Roblox rankings.</p>
+      </div>
+    </div>
+  </div>
+
+  <section id="rankings">
+    <div class="wrap">
+      <div class="section-head">
+        <div><h2>Explore game categories</h2><p>Pick a category and find something fun to play.</p></div>
+        <input class="search" id="search" type="search" placeholder="Search categories..." aria-label="Search categories">
+      </div>
+      <div class="cards" id="cards">
+        <article class="card" data-search="roleplay rp brookhaven adopt me"><div class="card-icon">🏡</div><h3>Roleplay</h3><p>Hang out, create stories, and explore worlds with other players.</p><span class="tag">POPULAR CATEGORY</span></article>
+        <article class="card" data-search="obby obstacle course parkour"><div class="card-icon">🏃</div><h3>Obby & Parkour</h3><p>Take on obstacle courses, tricky jumps, and fun challenges.</p><span class="tag">CHALLENGE</span></article>
+        <article class="card" data-search="simulator tycoon build"><div class="card-icon">🏗️</div><h3>Simulator & Tycoon</h3><p>Build, collect, upgrade, and grow your own virtual world.</p><span class="tag">BUILD & GROW</span></article>
+        <article class="card" data-search="horror scary survival"><div class="card-icon">👻</div><h3>Horror & Survival</h3><p>Team up with friends and test your skills in spooky adventures.</p><span class="tag">ADVENTURE</span></article>
+        <article class="card" data-search="sports soccer football basketball"><div class="card-icon">🏀</div><h3>Sports</h3><p>Play competitive games inspired by your favorite sports.</p><span class="tag">COMPETE</span></article>
+        <article class="card" data-search="fighting action battle"><div class="card-icon">⚡</div><h3>Action</h3><p>Jump into fast-paced challenges and action-packed worlds.</p><span class="tag">HIGH ENERGY</span></article>
+      </div>
+      <div class="empty" id="empty">No categories found. Try another search.</div>
+    </div>
+  </section>
+
+  <section class="vote-section" id="vote">
+    <div class="wrap">
+      <div class="section-head">
+        <div><h2>Community voting leaderboard</h2><p>Vote for your favorite game and see the top picks on this device.</p></div>
+        <span class="tag">LIVE ON THIS DEVICE</span>
+      </div>
+      <div class="vote-list" id="voteList">
+        <article class="vote-card" data-game="Brookhaven RP"><span class="game-icon">🏙️</span><span class="vote-info"><strong>Brookhaven RP</strong><small>Roleplay</small></span><span class="vote-count" id="count-brookhaven">0 votes</span><button class="vote-btn" data-vote="brookhaven">Vote</button></article>
+        <article class="vote-card" data-game="Adopt Me!"><span class="game-icon">🐾</span><span class="vote-info"><strong>Adopt Me!</strong><small>Roleplay & pets</small></span><span class="vote-count" id="count-adoptme">0 votes</span><button class="vote-btn" data-vote="adoptme">Vote</button></article>
+        <article class="vote-card" data-game="Tower of Hell"><span class="game-icon">🧗</span><span class="vote-info"><strong>Tower of Hell</strong><small>Obby</small></span><span class="vote-count" id="count-tower">0 votes</span><button class="vote-btn" data-vote="tower">Vote</button></article>
+        <article class="vote-card" data-game="Murder Mystery 2"><span class="game-icon">🕵️</span><span class="vote-info"><strong>Murder Mystery 2</strong><small>Mystery</small></span><span class="vote-count" id="count-mm2">0 votes</span><button class="vote-btn" data-vote="mm2">Vote</button></article>
+      </div>
+      <p class="notice" id="voteNotice">You can vote once per game on this browser. Votes are saved on this device only; a shared public leaderboard needs an online database and hosting.</p>
+    </div>
+  </section>
+
+  <section class="how" id="how">
+    <div class="wrap">
+      <h2>How it works</h2>
+      <p style="color:var(--muted);margin:8px 0 0">A simple way to discover and compare games.</p>
+      <div class="steps">
+        <div class="step"><b>1</b><h3>Explore</h3><p>Browse different Roblox game categories and discover new experiences.</p></div>
+        <div class="step"><b>2</b><h3>Compare</h3><p>Check ratings and player opinions when community voting is added.</p></div>
+        <div class="step"><b>3</b><h3>Play</h3><p>Open Roblox and search for the game you want to try.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="about">
+    <div class="wrap">
+      <div class="cta">
+        <div class="eyebrow">MADE FOR ROBLOX PLAYERS</div>
+        <h2>What will you play next?</h2>
+        <p>Roblox Rank Their is a fan-made discovery concept. It is not affiliated with or endorsed by Roblox Corporation.</p>
+        <a class="button" href="#rankings">Find a category</a>
+      </div>
+    </div>
+  </section>
+</main>
+<footer><div class="wrap"><span>© 2026 Roblox Rank Their</span><span>Fan-made website concept · Not an official Roblox site</span></div></footer>
+<script>
+  const search = document.getElementById('search');
+  const cards = [...document.querySelectorAll('.card')];
+  const empty = document.getElementById('empty');
+  const voteGames = {
+    brookhaven: 'count-brookhaven',
+    adoptme: 'count-adoptme',
+    tower: 'count-tower',
+    mm2: 'count-mm2'
+  };
+  const voteKey = 'robloxRankTheirVotes_v1';
+  const votedKey = 'robloxRankTheirVoted_v1';
+  let votes = {};
+  let voted = {};
+  try {
+    votes = JSON.parse(localStorage.getItem(voteKey) || '{}');
+    voted = JSON.parse(localStorage.getItem(votedKey) || '{}');
+  } catch (_) { votes = {}; voted = {}; }
+
+  function renderVotes() {
+    Object.entries(voteGames).forEach(([game, elementId]) => {
+      const count = Number(votes[game] || 0);
+      document.getElementById(elementId).textContent = `${count} ${count === 1 ? 'vote' : 'votes'}`;
+      const button = document.querySelector(`[data-vote="${game}"]`);
+      button.disabled = Boolean(voted[game]);
+      button.textContent = voted[game] ? 'Voted ✓' : 'Vote';
+    });
+    const list = document.getElementById('voteList');
+    [...list.children].sort((a, b) => {
+      const aKey = a.querySelector('button').dataset.vote;
+      const bKey = b.querySelector('button').dataset.vote;
+      return Number(votes[bKey] || 0) - Number(votes[aKey] || 0);
+    }).forEach(card => list.appendChild(card));
+  }
+
+  document.querySelectorAll('[data-vote]').forEach(button => {
+    button.addEventListener('click', () => {
+      const game = button.dataset.vote;
+      if (voted[game]) return;
+      votes[game] = Number(votes[game] || 0) + 1;
+      voted[game] = true;
+      try {
+        localStorage.setItem(voteKey, JSON.stringify(votes));
+        localStorage.setItem(votedKey, JSON.stringify(voted));
+      } catch (_) {
+        document.getElementById('voteNotice').textContent = 'Your browser could not save votes. You can still view the rankings during this visit.';
+      }
+      renderVotes();
+    });
+  });
+  renderVotes();
+
+  search.addEventListener('input', () => {
+    const term = search.value.trim().toLowerCase();
+    let visible = 0;
+    cards.forEach(card => {
+      const show = card.dataset.search.includes(term) || card.innerText.toLowerCase().includes(term);
+      card.style.display = show ? '' : 'none';
+      if (show) visible++;
+    });
+    empty.style.display = visible ? 'none' : 'block';
+  });
+</script>
+</body>
+</html>
